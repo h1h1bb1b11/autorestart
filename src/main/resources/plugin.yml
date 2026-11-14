@@ -1,0 +1,6 @@
+name: AutoRestart
+version: '1.0.0'
+main: com.autorestart.AutoRestartPlugin
+api-version: '1.21'
+description: 每天定时自动重启服务器，并提前广播公告与倒计时
+author: AutoRestart

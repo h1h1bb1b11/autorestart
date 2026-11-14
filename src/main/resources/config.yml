@@ -1,0 +1,21 @@
+# Daily restart time in 24-hour HH:mm format (default: 03:00)
+restart-time: "03:00"
+
+# Time zone used for restart-time, e.g. Asia/Shanghai. Leave empty to use the server's system time zone.
+time-zone: ""
+
+# Minutes before the restart at which a warning is broadcast (processed from largest to smallest)
+warn-minutes: [30, 10, 5, 3, 1]
+
+# Broadcast a message every second during the last N seconds; 0 disables it
+final-countdown-seconds: 10
+
+# Language of all player-facing messages: zh or en (anything else falls back to zh)
+language: zh
+
+# Optional override for the broadcast prefix. Leave empty to use "prefix" from lang/<language>.yml.
+prefix: ""
+
+# Optional override for the kick message shown right before the shutdown.
+# Leave empty to use "kick-message" from lang/<language>.yml.
+kick-message: ""

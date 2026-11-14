@@ -1,0 +1,14 @@
+# English messages (en)
+# Delete this file and the plugin will extract it again on the next start.
+
+# Broadcast prefix
+prefix: "[AutoRestart]"
+
+# Message shown to players kicked right before the shutdown
+kick-message: "The server is restarting. Please reconnect in a moment."
+
+# Minute-level warning, {minutes} is the number of minutes left
+restart-warning-minutes: "The server will restart in {minutes} minutes. Please log off in time."
+
+# Per-second countdown, {seconds} is the number of seconds left
+restart-warning-seconds: "The server will restart in {seconds} seconds!"

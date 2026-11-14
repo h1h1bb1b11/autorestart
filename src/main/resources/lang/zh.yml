@@ -1,0 +1,14 @@
+# 简体中文文案（zh）
+# 删除此文件后会自动从插件重新释放。
+
+# 公告前缀
+prefix: "[自动重启]"
+
+# 重启前踢出玩家时显示的提示
+kick-message: "服务器正在重启，请稍后再连接。"
+
+# 分钟级公告，{minutes} 为剩余分钟数
+restart-warning-minutes: "服务器将在 {minutes} 分钟后重启，请及时下线。"
+
+# 最后几秒的逐秒倒计时，{seconds} 为剩余秒数
+restart-warning-seconds: "服务器将在 {seconds} 秒后重启！"
