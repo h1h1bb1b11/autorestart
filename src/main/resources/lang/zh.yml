@@ -12,3 +12,9 @@ restart-warning-minutes: "服务器将在 {minutes} 分钟后重启，请及时�
 
 # 最后几秒的逐秒倒计时，{seconds} 为剩余秒数
 restart-warning-seconds: "服务器将在 {seconds} 秒后重启！"
+
+# 服务器持续卡顿时的提示，{tps} 为当前 TPS，{seconds} 为倒计时秒数
+lag-warning: "服务器负载过高（TPS {tps}），将在 {seconds} 秒后重启以恢复流畅。"
+
+# 卡顿重启的逐秒倒计时，{seconds} 为剩余秒数
+lag-warning-seconds: "服务器负载过高，{seconds} 秒后重启！"
