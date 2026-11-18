@@ -12,3 +12,9 @@ restart-warning-minutes: "The server will restart in {minutes} minutes. Please l
 
 # Per-second countdown, {seconds} is the number of seconds left
 restart-warning-seconds: "The server will restart in {seconds} seconds!"
+
+# Shown when the server keeps running behind, {tps} is the current TPS, {seconds} is the countdown
+lag-warning: "The server is falling behind (TPS {tps}). Restarting in {seconds} seconds to recover."
+
+# Per-second countdown for the lag restart, {seconds} is the number of seconds left
+lag-warning-seconds: "Server overloaded, restarting in {seconds} seconds!"
