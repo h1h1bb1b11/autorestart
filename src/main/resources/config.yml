@@ -1,7 +1,10 @@
-# Daily restart time in 24-hour HH:mm format (default: 03:00)
+# Weekly restart: which day (MONDAY..SUNDAY or 1..7). Use "daily" to restart every day.
+restart-day: MONDAY
+
+# Weekly restart time in 24-hour HH:mm format (default: 03:00)
 restart-time: "03:00"
 
-# Time zone used for restart-time, e.g. Asia/Shanghai. Leave empty to use the server's system time zone.
+# Time zone used for restart-day / restart-time, e.g. Asia/Shanghai. Leave empty to use the server's system time zone.
 time-zone: ""
 
 # Minutes before the restart at which a warning is broadcast (processed from largest to smallest)
@@ -9,6 +12,23 @@ warn-minutes: [30, 10, 5, 3, 1]
 
 # Broadcast a message every second during the last N seconds; 0 disables it
 final-countdown-seconds: 10
+
+# Restart when the server keeps falling behind (TPS stays below the threshold).
+lag-restart:
+  enabled: true
+  # TPS below this value counts as "running behind"
+  tps-threshold: 15.0
+  # How long TPS must stay below the threshold before a restart is scheduled
+  sustain-seconds: 60
+  # How often the TPS is sampled
+  sample-interval-seconds: 10
+  # Warning countdown before the forced restart
+  countdown-seconds: 15
+  # Ignore lag right after startup (world loading is usually slow)
+  grace-seconds: 120
+
+# Two restarts never happen closer than this; a restart inside the window is ignored
+min-restart-interval-hours: 5
 
 # Language of all player-facing messages: zh or en (anything else falls back to zh)
 language: zh
