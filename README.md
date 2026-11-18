@@ -1,15 +1,22 @@
 # AutoRestart
 
-A small Paper plugin that restarts the server at a fixed time every day. It warns
-players in advance, counts down the last seconds, and hands the actual relaunch to
-a startup script so the server comes back up automatically.
+A small Paper plugin that restarts the server weekly, and also restarts it when the
+server keeps falling behind (low TPS). It warns players in advance, counts down the
+last seconds, and hands the actual relaunch to a startup script so the server comes
+back up automatically.
 
 The plugin does not start the server itself. It only shuts the server down and
 writes a marker file that the startup script watches for.
 
 ## Features
 
-- Daily restart at a configurable `HH:mm` time in a configurable time zone.
+- Weekly restart on a configurable weekday (or daily) at a configurable `HH:mm` time
+  in a configurable time zone.
+- Lag detection: when TPS stays below a threshold for long enough, players are warned
+  and the server is restarted to recover.
+- Restarts are rate limited: two restarts are never closer than
+  `min-restart-interval-hours` (default 5 hours); a restart inside that window is
+  skipped.
 - Advance warnings at configurable minute marks (default: 30, 10, 5, 3 and 1 minute
   before the restart).
 - Optional per-second countdown during the last N seconds.
@@ -38,8 +45,16 @@ writes a marker file that the startup script watches for.
 
 | Key | Default | Description |
 | --- | --- | --- |
-| `restart-time` | `"03:00"` | Daily restart time in 24-hour `HH:mm` format. An invalid value is logged and replaced with `03:00`. |
-| `time-zone` | `""` | `ZoneId` used to evaluate `restart-time`, e.g. `Asia/Shanghai`. Empty or invalid values fall back to the server's system time zone. |
+| `restart-day` | `MONDAY` | Weekday of the scheduled restart: `MONDAY`..`SUNDAY` or `1`..`7`. Use `daily` to restart every day. |
+| `restart-time` | `"03:00"` | Restart time in 24-hour `HH:mm` format. An invalid value is logged and replaced with `03:00`. |
+| `time-zone` | `""` | `ZoneId` used to evaluate `restart-day` / `restart-time`, e.g. `Asia/Shanghai`. Empty or invalid values fall back to the server's system time zone. |
+| `lag-restart.enabled` | `true` | Restart the server when it keeps running behind. |
+| `lag-restart.tps-threshold` | `15.0` | TPS below this value counts as "running behind". |
+| `lag-restart.sustain-seconds` | `60` | TPS must stay below the threshold for this long before a restart is scheduled. |
+| `lag-restart.sample-interval-seconds` | `10` | How often TPS is sampled. |
+| `lag-restart.countdown-seconds` | `15` | Warning countdown before the forced restart. |
+| `lag-restart.grace-seconds` | `120` | Ignore lag right after startup, when world loading is usually slow. |
+| `min-restart-interval-hours` | `5` | Minimum time between two restarts. A restart inside the window is ignored. |
 | `warn-minutes` | `[30, 10, 5, 3, 1]` | Minute marks before the restart at which a warning is broadcast. Processed from largest to smallest; entries `<= 0` are ignored. An empty list restores the default values. |
 | `final-countdown-seconds` | `10` | Broadcast a message every second during the last N seconds. Clamped to `0`-`60`; `0` disables the countdown. |
 | `language` | `zh` | Language of all player-facing messages: `zh` or `en`. Any other value falls back to `zh`. |
@@ -56,10 +71,31 @@ contain the same keys:
 - `kick-message` – message shown to kicked players
 - `restart-warning-minutes` – minute warning, `{minutes}` placeholder
 - `restart-warning-seconds` – per-second countdown, `{seconds}` placeholder
+- `lag-warning` – lag restart warning, `{tps}` and `{seconds}` placeholders
+- `lag-warning-seconds` – lag restart countdown, `{seconds}` placeholder
 
 Edit the file of the language you use to customize the wording. If a key is missing
 from the file in the data folder, the built-in text from the jar is used instead.
 Deleting a language file makes the plugin extract it again on the next start.
+
+## Lag detection
+
+Every `sample-interval-seconds` the plugin reads the server TPS (Paper's
+`Server#getTPS()`; on servers without it the plugin estimates the TPS from the
+scheduler's real interval). If TPS stays below `tps-threshold` for
+`sustain-seconds`, a countdown of `countdown-seconds` is broadcast and the server is
+restarted.
+
+Lag is ignored during the first `grace-seconds` after the plugin is enabled, so world
+loading does not trigger a restart.
+
+## Restart rate limit
+
+Every performed restart is written to `plugins/AutoRestart/data.yml`. Before any
+restart (scheduled or lag-triggered) the plugin checks that at least
+`min-restart-interval-hours` passed since the last one; otherwise the restart is
+skipped and only logged. A skipped scheduled restart waits for the next scheduled
+day instead of retrying immediately.
 
 ## How the automatic restart works
 
